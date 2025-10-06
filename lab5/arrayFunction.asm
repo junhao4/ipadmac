@@ -99,29 +99,29 @@ e1:
 #######################################################################
 ###   Student Function findMin   ### 
 #Input: Lower Array Pointer in $a0, Higher Array Pointer in $a1
-#Output: $v0 contains the address of min item 
+#Output: $v0 contains the min item $v1 contains min address 
 #Purpose: Find and return the minimum item 
 #              between $a0 and $a1 (inclusive)
 #Registers used: <Fill in with your register usage>
 #Assumption: Array element is word size (4-byte), $a0 <= $a1
 findMin:
-	lw $t0, 0($a0)     #t0 = min
-	addi $a0, $a0, 4
-	addi $t4, $0, 0    #t4 = res indx
-	addi $t5, $0, 1    #t5 = loop i
-loop:
-	beq $a0, $a1, exit
-	lw $t1, 0($a0)    #t1 = arr[i]
-	slt $t2, $t1, $t0
-	beq $t2, $0, skip
-	addi $t0, $t1, 0
-	addi $t4, $t5, 0
+	lw $t0, 0($a0)   #t0 = arr[low] = min
+	add $t1, $0, $a0   #t1 = indexmin
+	add $t2, $0, $a0   #t2 = current address
+
+	beq $t2, $a1, exit
+	lw $t3, 0($t2)    #t3 = arr[current]
+        
+	slt $t4, $t3, $t0      #if curr < min, t4 = 1
+	beq $t4, $0, skip      #if t4 = 0, skip, hence is curr >= min skip, else
+	addi $t0, $t3, 0       #min = arr[curr]
+	addi $t1, $t2, 0       #indexmin = curr addr
+
 skip:
-	addi $a0, $a0, 4
-	addi $t5, $t5, 1
-	j loop
-	
+	addi $t2, $t2, 4
+
+
 exit:
-	addi $a0, $t0, 0
-	addi $a1, $t4, 0
+	addi $v0, $t0, 0     #v0 = min item
+	addi $v1, $t1, 0     #v1 = min address
 	jr $ra			# return from this function
