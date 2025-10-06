@@ -27,11 +27,11 @@ main:
 	# Call the findMin function
 	# setup the parameter(s)
 
-	la $a0, array
+	la $t3, array
 	sll $t0, $t0, 2
-	add $a0, $a0, $t0
+	add $a0, $t3, $t0
 	sll $t1, $t1, 2
-	add $a1, $a0, $t1
+	add $a1, $t3, $t1
 
 	# call the function
 
@@ -39,7 +39,7 @@ main:
 
 	# Print the min item
 	# place the min item in $t3	for printing
-	addi $t3, $a0 ,0
+	addi $t3, $v0 ,0
 
 	# Print an integer followed by a newline
 	li   $v0, 1   		# system call code for print_int
@@ -53,7 +53,10 @@ main:
 	#Calculate and print the index of min item
 	
 	# Place the min index in $t3 for printing	
-	addi $t3, $a1, 0
+	addi $t3, $v1, 0
+	la $t4, array
+	sub $t3, $t3, $t4
+	srl $t3, $t3, 2
 
 	# Print the min index
 	# Print an integer followed by a newline
@@ -108,7 +111,8 @@ findMin:
 	lw $t0, 0($a0)   #t0 = arr[low] = min
 	add $t1, $0, $a0   #t1 = indexmin
 	add $t2, $0, $a0   #t2 = current address
-
+	addi $a1, $a1, 4
+loop:
 	beq $t2, $a1, exit
 	lw $t3, 0($t2)    #t3 = arr[current]
         
@@ -119,7 +123,7 @@ findMin:
 
 skip:
 	addi $t2, $t2, 4
-
+	j loop
 
 exit:
 	addi $v0, $t0, 0     #v0 = min item
